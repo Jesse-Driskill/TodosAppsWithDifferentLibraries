@@ -9,8 +9,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // acl stands for addClickListener
-    const acl = (element, func) => {
-        return element.addEventListener('click', func)
+    const acl = (element, func, event) => {
+        event.preventDefault();
+        return element.addEventListener('click', () => func(event));
     }
 
     const hello = g('hello');
@@ -19,8 +20,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const counter = g('counter');
     counter.innerHTML = 0;
 
-    acl(addButton, () => { counter.innerHTML = parseInt(counter.innerHTML) + 1});
-    acl(subtractButton, () => { counter.innerHTML = parseInt(counter.innerHTML) - 1});
+    acl(addButton, () => { counter.innerHTML = parseInt(counter.innerHTML) + 1}, event);
+    acl(subtractButton, () => { counter.innerHTML = parseInt(counter.innerHTML) - 1}, event);
     
 
 })

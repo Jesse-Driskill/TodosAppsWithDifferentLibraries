@@ -6,3 +6,23 @@
     
     border-bottom: 2px solid black;
 }
+
+.flexy {
+    display: flex;
+    flex-direction: row;
+}
+
+.m-5 {
+    margin-left: 50px;
+    margin-right: 50px;
+    width: 300px;
+    font-size: 50px;
+}
+
+#addbutton {
+    background-color: green;
+}
+
+#subtractbutton {
+    background-color: red;
+}

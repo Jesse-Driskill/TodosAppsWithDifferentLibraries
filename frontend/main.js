@@ -1,5 +1,4 @@
 
-// const root = document.getElementById("root");
 
 document.addEventListener("DOMContentLoaded", () => {
     
@@ -17,8 +16,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const ael = (eventType, element, func) => {
         return element.addEventListener(eventType, () => func(event) );
     }
-    // example usage: ael('click', redButton, () => {console.log('You just pressed a red button!'), event} )
-    // upon clicking the red button, the console would log.
+    // example usage: ael('click', redButton, () => {console.log('You just pressed a red button!')} )
+    // upon clicking the red button, the console will log the message.
     // this function is just here so that you don't need to type addEventListener every time you want to add an event listener.
     //
 
@@ -30,33 +29,52 @@ document.addEventListener("DOMContentLoaded", () => {
     //
 
     // This section grabs and defines HTML elements as variables
-    const hello = g('hello');
-    const addButton = g("addbutton");
-    const subtractButton = g('subtractbutton');
-    const counter = g('counter');
-    const submitTodoButton = g('submittodobutton');
-    const todoForm = g('todoform');
-    const todoTitle = g('todotitle');
-    const todoDescription = g('tododescription');
-    const listOfTodos = g('listoftodos');
+    const hello = document.getElementById('hello');
+    const addButton = document.getElementById("addbutton");
+    const subtractButton = document.getElementById('subtractbutton');
+    const counter = document.getElementById('counter');
+
+    //todos
+    const submitTodoButton = document.getElementById('submittodobutton');
+    const todoForm = document.getElementById('todoform');
+    const todoTitle = document.getElementById('todotitle');
+    const todoDescription = document.getElementById('tododescription');
+    const listOfTodos = document.getElementById('listoftodos');
     // 
 
     //initializes a todos array
     let todos = [];
     //
 
+
+
+
     // initializes the innerHTML of the element with the id of 'counter' to 0.
     counter.innerHTML = 0;
 
     // Adds click listeners to the add and subtract buttons
     // On each click, the innerHTML of the counter element is updated accordingly.
-    ael('click', addButton, () => { counter.innerHTML = parseInt(counter.innerHTML) + 1});
-    ael('click', subtractButton, () => { counter.innerHTML = parseInt(counter.innerHTML) - 1});
+
+    // document.getElementById('addbutton').addEventListener('click', () => {
+    //     document.getElementById('counter').innerHTML = parseInt(document.getElementById('counter').innerHTML) + 1;
+    // })
+
+    // document.getElementById('subtractbutton').addEventListener('click', () => {
+    //     document.getElementById('counter').innerHTML = parseInt(document.getElementById('counter').innerHTML) - 1;
+    // })
+
+    ael('click', addButton, () => { 
+        counter.innerHTML = parseInt(counter.innerHTML) + 1
+        console.log('hi!')
+    });
+    ael('click', subtractButton, () => { 
+        counter.innerHTML = parseInt(counter.innerHTML) - 1
+    });
 
     // Adds submit event listener to the todo form
-    ael('submit', todoForm, () => {
-
+    todoForm.addEventListener('submit', () => {
         event.preventDefault();
+        // event.preventDefault();
 
         let newTodo = {
             id: todos.length + 1,
@@ -82,15 +100,39 @@ document.addEventListener("DOMContentLoaded", () => {
         newTodoListItem.appendChild(newTodoTitle);
         newTodoListItem.appendChild(newTodoDescription);
         
-        const deleteTodoButton = document.createElement('button');
+        const deleteTodoButton = dce('button');
         deleteTodoButton.innerHTML = 'DELETE TODO';
         deleteTodoButton.todoId = newTodo.id;
         
         newTodoListItem.appendChild(deleteTodoButton);
 
-        ael('click', deleteTodoButton, () => { g(deleteTodoButton.todoId).remove() })
+        ael('click', deleteTodoButton, () => { 
+            todos.splice(deleteTodoButton.todoId - 1, 1) 
+            g(deleteTodoButton.todoId).remove();
+            console.log(todos);
+        });
 
-    })
+        const id = newTodo.id
+        const title = newTodo.title;
+        const description = newTodo.description;
+
+        
+
+        const data = JSON.stringify({ id: id, title: title, description: description });
+        fetch("/api/todos", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+        }).then(response => response.text())
+        .then(data => console.log(data))
+        .catch(error => console.error(error));
+
+    
+
+    });
+    //
     
 
 })

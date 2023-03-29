@@ -2,7 +2,7 @@
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <!-<![endif]-->
 <html>
     <head>
         <meta charset="utf-8">
@@ -13,7 +13,7 @@
         <link rel="stylesheet" href="style.css">
     </head>
     <body>
-        <script src="main.js" async defer></script>
+        <script src="main.js"></script>
         <!--[if lt IE 7]>
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
@@ -35,8 +35,12 @@
                     SUBTRACT
                 </button>
 
+                
+
                 <h1 id="counter" style="font-size: 72px; 
                 margin-left: 50px;"> 0 </h1>
+                
+                
             </div>
 
 
@@ -45,7 +49,7 @@
             <h1> TODOS APP </h1>
             <div class="line"> </div>
 
-            <form id="todoform">
+            <form id="todoform" method="POST" action="/api/todos">
 
                 <input 
                 type="text" 

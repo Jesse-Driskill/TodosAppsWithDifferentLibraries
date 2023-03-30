@@ -90,10 +90,6 @@ const server = http.createServer((request, response) => {
                     let obj = {};
                     obj[parseInt(todo.id)] = todo;
 
-                    console.log('Im catch')
-                    console.log(todo, 'Im todo in catch')
-                    console.log(obj, 'im obj in catch')
-
                     fs.writeFile('todos.json', JSON.stringify(obj), (err) => {
                         if (err) {
                             response.writeHead(500, { 'Content-Type': 'text/plain' });

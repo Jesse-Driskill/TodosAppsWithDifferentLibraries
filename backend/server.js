@@ -35,7 +35,7 @@ const server = http.createServer((request, response) => {
         })
 
     }
-    else if (request.method === 'GET' && (request.url === '/main.js' || request.url === '/style.css')) {
+    else if (request.method === 'GET' && (request.url === '/main.js' || request.url === '/style.css') || request.url === '/todos/getTodos.js') {
         const filePath = path.join(__dirname, '..', 'frontend', request.url);
         fs.readFile(filePath, 'utf-8', (err, data) => {
           if (err) {
@@ -52,7 +52,7 @@ const server = http.createServer((request, response) => {
         let body = '';
         request.on('data', (chunk) => {
             body += chunk.toString();
-            console.log(body);
+            console.log(body, 'im body');
         })
         request.on('end', () => {
             // console.log(body);

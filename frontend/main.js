@@ -2,6 +2,24 @@
 
 document.addEventListener("DOMContentLoaded", () => {
     
+    let todos;
+
+    fetch("api/todos", {
+        method: "GET"
+        // headers: {"Content-Type": "application/json"},
+
+    }).then(response => {
+        if (response.ok) {
+            return response.json();
+        }
+        throw new Error('Network response was not ok');
+    }).then(data => {
+        todos = data;
+        console.log(data);
+    }).catch(error => {
+        console.error('Error:', error);
+    })
+    
     // This function is just here so that you can save time when grabbing elements by their ids.
     const g = (string) => {
         return document.getElementById(string);
@@ -43,7 +61,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // 
 
     //initializes a todos array
-    let todos = [];
+        console.log(todos, 'im todos outside of fetch')
     //
 
 
@@ -116,15 +134,17 @@ document.addEventListener("DOMContentLoaded", () => {
         const title = newTodo.title;
         const description = newTodo.description;
 
-        
+        let newObj = {};
+        newObj = {id: id, title: title, description: description};
+        console.log(newObj, 'Im newObj')
 
-        const data = JSON.stringify({ id: id, title: title, description: description });
+        const data = JSON.stringify(newObj);
         fetch("/api/todos", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify(data)
+            body: data
         }).then(response => response.text())
         .then(data => console.log(data))
         .catch(error => console.error(error));

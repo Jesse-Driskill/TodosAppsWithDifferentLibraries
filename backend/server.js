@@ -5,6 +5,19 @@ const path = require('path');
 
 const server = http.createServer((request, response) => {
 
+    function readFilePromise(filePath, options) {
+        return new Promise((resolve, reject) => {
+            fs.readFile(filePath, options, (error, data) => {
+                if (error) {
+                    reject(error);
+                }
+                else {
+                    resolve(data);
+                }
+            })
+        })
+    }
+
     // response.setHeader('Access-Control-Allow-Methods', 'POST, GET, PUT, DELETE')
     // response.Content.Headers.Allow.Add("POST");
 
@@ -35,41 +48,89 @@ const server = http.createServer((request, response) => {
           }
         });
     }
-    else if (request.method === 'OPTIONS') {
-        response.setHeader('Access-Control-Allow-Origin', 'http://127.0.0.1:5500');
-        response.setHeader('Access-Control-Allow-Methods', 'POST, GET, PUT, DELETE');
-        response.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-        response.writeHead(200);
-    }
     else if (request.method === 'POST' && request.url === '/api/todos') {
         let body = '';
         request.on('data', (chunk) => {
             body += chunk.toString();
+            console.log(body);
         })
         request.on('end', () => {
             // console.log(body);
-            const data = JSON.parse(body);
-            response.writeHead(200, {'Content-Type': 'text/plain',
-            'Access-Control-Allow-Origin': 'http://127.0.0.1:5500' });
+            let todo = JSON.parse(body);
+            console.log(todo, 'I am todo')
+            response.writeHead(200, {'Content-Type': 'text/plain' });
             response.end('Data received and processed!');
 
             //Need to read file, get object, then replace with new object that has the data
 
-            fs.writeFile("todos.json", data, (error) => {
+            
 
-            if (error) {
-                response.writeHead(500, { 'Content-Type': 'text/plain', 
-                'Access-Control-Allow-Origin': 'http://127.0.0.1:5500' });
-                response.end('Internal Server Error');
-            } else {
-                response.writeHead(200, { 'Content-Type': 'text/plain' });
-                response.end(`Hello world written to todos.json successfully`);
+            readFilePromise("todos.json", "utf8").then((data) => {
+                
+                try {
+                    let obj = JSON.parse(data);
+                    if (obj && obj[todo.id] === undefined) {
+                        obj[todo.id] = todo;
+                    }
+
+                    fs.writeFile('todos.json', JSON.stringify(obj), (err) => {
+                        // if (err) throw err;
+                        if (err) {
+                            response.writeHead(500, { 'Content-Type': 'text/plain'});
+                            response.end('Internal Server Error');
+                        } else {
+                            response.writeHead(200, { 'Content-Type': 'text/plain' });
+                            response.end(`Hello world written to todos.json successfully`);
+                        }
+                        console.log('Data written to file');
+                    })
+
+                } catch(error) {
+                    
+                    let obj = {};
+                    obj[parseInt(todo.id)] = todo;
+
+                    console.log('Im catch')
+                    console.log(todo, 'Im todo in catch')
+                    console.log(obj, 'im obj in catch')
+
+                    fs.writeFile('todos.json', JSON.stringify(obj), (err) => {
+                        if (err) {
+                            response.writeHead(500, { 'Content-Type': 'text/plain' });
+                            response.end('Internal Server Error');
+                        } else {
+                            response.writeHead(200, { 'Content-Type': 'text/plain' });
+                            response.end(`Data written to todos.json successfully`);
+                        }
+                        console.log('Data written to file');
+                    })
+
+                    console.error(error);
+                } finally {
+                    console.log('Done');
+                }
+            })
+        })
+    } else if (request.method === 'GET' && request.url === '/api/todos') {
+            readFilePromise("todos.json", "utf8").then((data) => {
+            try {
+                response.writeHead(200, {'Content-Type': 'application/json'});
+                console.log(data, 'im data');
+                response.write(data);
+                response.end();
+            } catch {
+                console.log(data, 'im data');
+                response.writeHead(200, {'Content-Type': 'application/javascript'});
+                response.write('');
+                response.end();
+            }  finally {
+
             }
         })
-        })
-
         
-    } else {
+        
+    } 
+    else {
         response.writeHead(404, { 'Content-Type': 'text/plain', 'Access-Control-Allow-Origin': 'http://127.0.0.1:5500' });
         response.end('Not Found');
     }

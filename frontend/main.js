@@ -139,7 +139,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         spawnTodo(newTodo);
 
-        const data = JSON.stringify(newTodo);
+        const data = JSON.stringify({todo: newTodo, action: 'CREATETODO'});
         fetch("/api/todos", {
             method: "POST",
             headers: {

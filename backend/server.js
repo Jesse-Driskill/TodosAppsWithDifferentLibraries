@@ -49,14 +49,16 @@ const server = http.createServer((request, response) => {
         });
     }
     else if (request.method === 'POST' && request.url === '/api/todos') {
+        console.log(request.method, 'im request.method');
         let body = '';
         request.on('data', (chunk) => {
             body += chunk.toString();
             console.log(body, 'im body');
         })
         request.on('end', () => {
-            // console.log(body);
-            let todo = JSON.parse(body);
+            //beginning of action check for CREATETODO
+            if (JSON.parse(body).action === "CREATETODO") {
+                let todo = JSON.parse(body).todo;
             console.log(todo, 'I am todo')
             response.writeHead(200, {'Content-Type': 'text/plain' });
             response.end('Data received and processed!');
@@ -69,7 +71,8 @@ const server = http.createServer((request, response) => {
                 
                 try {
                     
-                    // let obj = JSON.parse(data);
+                    let obj = JSON.parse(data);
+                    
                     console.log(obj, 'im obj line 73 try');
                     if (obj && obj[todo.id] === undefined) {
                         obj[todo.id] = todo;
@@ -108,6 +111,11 @@ const server = http.createServer((request, response) => {
                     console.log('Done');
                 }
             })
+            }//end of action check for CREATETODO
+            else if (JSON.parse(body).action === "DELETETODO") {
+
+            }
+            
         })
     } else if (request.method === 'GET' && request.url === '/api/todos') {
             readFilePromise("todos.json", "utf8").then((data) => {

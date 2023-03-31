@@ -73,6 +73,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     // 
 
+
+    //middleware
+
+    //
+
+
     //
        setTimeout(() => {
            console.log(todos, 'im todos outside of fetch')

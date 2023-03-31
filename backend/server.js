@@ -68,7 +68,9 @@ const server = http.createServer((request, response) => {
             readFilePromise("todos.json", "utf8").then((data) => {
                 
                 try {
-                    let obj = JSON.parse(data);
+                    
+                    // let obj = JSON.parse(data);
+                    console.log(obj, 'im obj line 73 try');
                     if (obj && obj[todo.id] === undefined) {
                         obj[todo.id] = todo;
                     }

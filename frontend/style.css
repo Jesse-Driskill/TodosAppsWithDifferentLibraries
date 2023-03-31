@@ -26,3 +26,13 @@
 #subtractbutton {
     background-color: red;
 }
+
+.extend-height {
+    height: 70px;
+}
+
+.extend-height::placeholder {
+    text-align: left;
+    vertical-align: top;
+
+}

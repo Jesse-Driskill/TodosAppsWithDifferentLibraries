@@ -53,6 +53,7 @@ document.addEventListener("DOMContentLoaded", () => {
         let el2 = dce('div');  //div with title
         let el3 = dce('div');   //div with description
         let el4 = dce('button');    //delete button
+        let el5 = dce('button');    //edit button
 
         el1.classList.add('todo-li');
         el1.id = todo.id;
@@ -60,11 +61,14 @@ document.addEventListener("DOMContentLoaded", () => {
         el2.innerHTML = `Title: ${todo.title}`;
         el3.innerHTML = `Description: ${todo.description}`;
         el4.innerHTML = 'DELETE TODO';
+        el5.innerHTML = 'EDIT TODO';
+
         el4.todoId = todo.id;
 
         el1.appendChild(el2);
         el1.appendChild(el3);
         el1.appendChild(el4);
+        el1.appendChild(el5);
         listOfTodos.appendChild(el1);
 
         ael('click', el4, () => {
@@ -80,6 +84,49 @@ document.addEventListener("DOMContentLoaded", () => {
 
             })
             el1.remove();
+        });
+
+        ael('click', el5, () => {
+            let el6 = dce('form'); //New form to update todos
+            let el7 = dce('input'); //Todo title input
+            let el8 = dce('input'); //Todo description input
+            let el9 = dce('button'); // New todo form submit button
+
+            el7.classList.add('extend-height');
+            el8.classList.add('extend-height');
+
+            el7.setAttribute('placeholder', 'New todo title');
+            el8.setAttribute('placeholder', 'New todo description');
+            el9.setAttribute('type', 'submit');
+            el9.innerHTML = 'Submit new todo';
+
+            el6.addEventListener('submit', (event) => {
+                event.preventDefault();
+                let newTodo = {
+                    id: todo.id,
+                    title: el7.value,
+                    description: el8.value,
+                };
+                let data = JSON.stringify({todo: newTodo, action: "UPDATETODO"});
+
+                el2.innerHTML = `Title: ${newTodo.title}`;
+                el3.innerHTML = `Description: ${newTodo.description}`;
+
+                // fetch("/api/todos", {
+                //     method: "POST",
+                //     headers: {
+                //         "Content-Type": "application/json"
+                //     },
+                //     body: data
+                // }).then(response => response.text()).then(data => console.log(data)).catch(error => console.error(error))
+                
+            
+            })
+
+            el6.appendChild(el7);
+            el6.appendChild(el8);
+            el6.appendChild(el9);
+            el1.appendChild(el6);
         })
     }
     // 

@@ -68,6 +68,17 @@ document.addEventListener("DOMContentLoaded", () => {
         listOfTodos.appendChild(el1);
 
         ael('click', el4, () => {
+            fetch("api/todos", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    todoId: todo.id,
+                    action: "DELETETODO"
+                })
+
+            })
             el1.remove();
         })
     }

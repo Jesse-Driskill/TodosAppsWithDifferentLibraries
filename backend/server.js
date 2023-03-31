@@ -56,12 +56,14 @@ const server = http.createServer((request, response) => {
             console.log(body, 'im body');
         })
         request.on('end', () => {
+            let payload = JSON.parse(body);
+
             //beginning of action check for CREATETODO
-            if (JSON.parse(body).action === "CREATETODO") {
+            if (payload.action === "CREATETODO") {
                 let todo = JSON.parse(body).todo;
-            console.log(todo, 'I am todo')
-            response.writeHead(200, {'Content-Type': 'text/plain' });
-            response.end('Data received and processed!');
+                console.log(todo, 'I am todo')
+                response.writeHead(200, {'Content-Type': 'text/plain' });
+                response.end('Data received and processed!');
 
             //Need to read file, get object, then replace with new object that has the data
 
@@ -112,8 +114,33 @@ const server = http.createServer((request, response) => {
                 }
             })
             }//end of action check for CREATETODO
-            else if (JSON.parse(body).action === "DELETETODO") {
+            else if (payload.action === "DELETETODO") {
+                let todoId = payload.todoId;
+                console.log(payload.action);
 
+                readFilePromise("todos.json", "utf8").then(data => {
+                    try {
+                        let obj = JSON.parse(data);
+                        delete obj[todoId];
+
+                        fs.writeFile("todos.json", JSON.stringify(obj), (err) => {
+                            if (err) {
+                                response.writeHead(500, {'Content-Type': 'text/plain'});
+                                response.end('Internal Server Error');
+                            } else {
+                                response.writeHead(200, { 'Content-Type': 'text/plain' });
+                                response.end('Data removed from todos.json successfully');
+                            }
+                        
+                        })
+                        console.log('Data deleted from file')
+                    } catch {
+                        response.writeHead(500, {'Content-Type': 'text/plain'});
+                        response.end('Internal Server Error');
+                    } finally {
+
+                    }
+                })
             }
             
         })

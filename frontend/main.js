@@ -92,6 +92,9 @@ document.addEventListener("DOMContentLoaded", () => {
             let el8 = dce('input'); //Todo description input
             let el9 = dce('button'); // New todo form submit button
 
+            el6.setAttribute('action', "/api/todos/");
+            el6.setAttribute('method', "POST");
+
             el7.classList.add('extend-height');
             el8.classList.add('extend-height');
 
@@ -101,24 +104,28 @@ document.addEventListener("DOMContentLoaded", () => {
             el9.innerHTML = 'Submit new todo';
 
             el6.addEventListener('submit', (event) => {
+
                 event.preventDefault();
                 let newTodo = {
                     id: todo.id,
                     title: el7.value,
                     description: el8.value,
                 };
-                let data = JSON.stringify({todo: newTodo, action: "UPDATETODO"});
 
                 el2.innerHTML = `Title: ${newTodo.title}`;
                 el3.innerHTML = `Description: ${newTodo.description}`;
 
-                // fetch("/api/todos", {
-                //     method: "POST",
-                //     headers: {
-                //         "Content-Type": "application/json"
-                //     },
-                //     body: data
-                // }).then(response => response.text()).then(data => console.log(data)).catch(error => console.error(error))
+                
+
+                let data = JSON.stringify({todo: newTodo, action: "UPDATETODO"});
+
+                fetch("/api/todos", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: data
+                }).then(response => response.text()).then(data => console.log(data)).catch(error => console.error(error))
                 
             
             })

@@ -114,7 +114,7 @@ const server = http.createServer((request, response) => {
                 }
             })
             }//end of action check for CREATETODO
-            else if (payload.action === "DELETETODO") {
+            else if (payload.action === "DELETETODO") { //Beginning of action check for DELETETODO
                 let todoId = payload.todoId;
                 console.log(payload.action);
 
@@ -137,6 +137,35 @@ const server = http.createServer((request, response) => {
                     } catch {
                         response.writeHead(500, {'Content-Type': 'text/plain'});
                         response.end('Internal Server Error');
+                    } finally {
+
+                    }
+                })
+            } //END OF ACTION CHECK FOR DELETETODO
+            else if (payload.action === "UPDATETODO") {
+                let todoId = payload.todo.id;
+                let todo = payload.todo;
+
+                readFilePromise("todos.json", "utf8").then(data => {
+                    try {
+                        let obj = JSON.parse(data);
+                        console.log(obj[todoId], 'IM OBJ[TODOID!!!!]')
+                        if (obj[todoId]) {
+                            obj[todoId] = todo;
+                            fs.writeFile("todos.json", JSON.stringify(obj), (err) => {
+                                if (err) {
+                                    response.writeHead(500, {'Content-Type': 'text/plain'});
+                                    response.end('Internal Server Error');
+                                } else {
+                                    response.writeHead(200, {'Content-Type': 'text/plain'});
+                                    response.end('Data updated in todos.json successfully!')
+                                }
+                            })
+                            console.log('Data updated in todos.json!')
+                        }
+                    } catch {
+                        response.writeHead(500, {'Content-Type': 'text/plain'});
+                        response.end("Internal Server Error");
                     } finally {
 
                     }

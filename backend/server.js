@@ -49,11 +49,11 @@ const server = http.createServer((request, response) => {
         });
     }
     else if (request.method === 'POST' && request.url === '/api/todos') {
-        console.log(request.method, 'im request.method');
+        // console.log(request.method, 'im request.method');
         let body = '';
         request.on('data', (chunk) => {
             body += chunk.toString();
-            console.log(body, 'im body');
+            // console.log(body, 'im body');
         })
         request.on('end', () => {
             let payload = JSON.parse(body);
@@ -61,7 +61,7 @@ const server = http.createServer((request, response) => {
             //beginning of action check for CREATETODO
             if (payload.action === "CREATETODO") {
                 let todo = JSON.parse(body).todo;
-                console.log(todo, 'I am todo')
+                // console.log(todo, 'I am todo');
                 response.writeHead(200, {'Content-Type': 'text/plain' });
                 response.end('Data received and processed!');
 
@@ -75,7 +75,7 @@ const server = http.createServer((request, response) => {
                     
                     let obj = JSON.parse(data);
                     
-                    console.log(obj, 'im obj line 73 try');
+                    // console.log(obj, 'im obj line 73 try');
                     if (obj && obj[todo.id] === undefined) {
                         obj[todo.id] = todo;
                     }
@@ -149,7 +149,7 @@ const server = http.createServer((request, response) => {
                 readFilePromise("todos.json", "utf8").then(data => {
                     try {
                         let obj = JSON.parse(data);
-                        console.log(obj[todoId], 'IM OBJ[TODOID!!!!]')
+                        // console.log(obj[todoId], 'IM OBJ[TODOID!!!!]');
                         if (obj[todoId]) {
                             obj[todoId] = todo;
                             fs.writeFile("todos.json", JSON.stringify(obj), (err) => {
@@ -161,7 +161,7 @@ const server = http.createServer((request, response) => {
                                     response.end('Data updated in todos.json successfully!')
                                 }
                             })
-                            console.log('Data updated in todos.json!')
+                            console.log('Data updated in todos.json!');
                         }
                     } catch {
                         response.writeHead(500, {'Content-Type': 'text/plain'});
@@ -177,11 +177,11 @@ const server = http.createServer((request, response) => {
             readFilePromise("todos.json", "utf8").then((data) => {
             try {
                 response.writeHead(200, {'Content-Type': 'application/json'});
-                console.log(data, 'im data');
+                // console.log(data, 'im data');
                 response.write(data);
                 response.end();
             } catch {
-                console.log(data, 'im data');
+                // console.log(data, 'im data');
                 response.writeHead(200, {'Content-Type': 'application/javascript'});
                 response.write('');
                 response.end();

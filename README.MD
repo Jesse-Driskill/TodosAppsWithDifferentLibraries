@@ -1,7 +1,11 @@
-Instructions: 
+Instructions:
+
+
 Make sure you have node js installed  
 
-Download Vanilla-JS-App  
+Download Vanilla-JS-App
+
+npm install graphql
 
 cd into the backend folder  
 

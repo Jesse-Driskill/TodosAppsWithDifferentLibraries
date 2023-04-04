@@ -13,12 +13,17 @@ module.exports = {
         return todos[id];
     },
     createNewTodo: (todo) => {
+        let todosArr = Object.values(todos);
+        console.log(todosArr);
+        console.log(todosArr[todosArr.length - 1].id, 'im key of final value of todosArr');
         if (!todos[todo.id]) {
             todos[todo.id] = todo;
             fs.writeFileSync(path.join(__dirname, 'todos.json'), JSON.stringify(todos));
         } else {
             console.error(`TODO WITH ID OF ${todo.id} ALREADY EXISTS`);
         }
+        return todo;
+
     },
     updateTodoById: (id, title, description) => {
         if (todos[id]) {

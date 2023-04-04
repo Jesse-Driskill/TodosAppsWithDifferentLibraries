@@ -24,7 +24,7 @@ const typeDefinitions = `
     }
 
     type Mutation {
-        createTodo(title: String!, description: String): Todo!
+        createTodo(id: ID!, title: String!, description: String): Todo!
         updateTodo(id: ID!, title: String, description: String): Todo!
         deleteTodo(id: ID!): ID!
     }
@@ -40,19 +40,12 @@ const resolvers = {
         }
     },
     Mutation: {
-        createTodo: (_, { input }) => {
+        createTodo: (_, input) => {
             const newTodo = createNewTodo(input);
             return newTodo;
         },
         updateTodo: (_, input) => {
-            // let title = input.title;
-            // let description = input.description;
-            // let id = input.id;
-            // const updatedTodo = updateTodoById(id, title, description);
             const updatedTodo = updateTodoById(input.id, input.title, input.description);
-            // console.log(title, 'im title');
-            // console.log(description, 'im description');
-            // console.log(id, 'im id');
             return updatedTodo;
         },
         deleteTodo: (_, input) => {

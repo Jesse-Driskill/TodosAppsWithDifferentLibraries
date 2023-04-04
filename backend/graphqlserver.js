@@ -1,3 +1,14 @@
+// import { getAllTodos, getTodoById, updateTodoById, deleteTodo, createNewTodo } from './todosData';
+const todoMiddleware = require('./todosData.js')
+
+const getAllTodos = todoMiddleware.getAllTodos;
+const getTodoById = todoMiddleware.getTodoById;
+const updateTodoById = todoMiddleware.updateTodoById;
+const deleteTodo = todoMiddleware.deleteTodo;
+const createNewTodo = todoMiddleware.createNewTodo;
+
+console.log(deleteTodo);
+
 const { ApolloServer, gql } = require('apollo-server');
 
 const typeDefinitions = `
@@ -19,10 +30,12 @@ const typeDefinitions = `
     }
 `
 
+
 const resolvers = {
     Query: {
-        todos: () => { return getAllTodos(); },
-        todo: (_, {id}) => {
+        // getTodos: () => { return [getAllTodos()]; },
+        getTodos: () => { return getAllTodos() },
+        getTodo: (_, {id}) => {
             return getTodoById(id);
         }
     },
@@ -40,12 +53,17 @@ const resolvers = {
             return deletedTodo;
         }
     },
-    Todo: {
+    // Todo: {
 
-    }
+    // }
 }
 
-const apolloServer = new ApolloServer({ typeDefinitions, resolvers });
+
+
+
+
+
+const apolloServer = new ApolloServer({ typeDefs: typeDefinitions, resolvers });
 apolloServer.listen(4000).then(() => {
     console.log(`Server ready at port 4000`)
 });

@@ -20,16 +20,20 @@ module.exports = {
             console.error(`TODO WITH ID OF ${todo.id} ALREADY EXISTS`);
         }
     },
-    updateTodoById: (id, input) => {
+    updateTodoById: (id, title, description) => {
         if (todos[id]) {
             todos[id] = {
                 id: id,
-                title: input.title,
-                description: input.description
+                title: title,
+                description: description
             }
-
-            fs.writeFileSync('./todos.json', JSON.stringify(todos));
+            console.log("IF STATEMENT TRIGGER")
+            fs.writeFile(path.join(__dirname, 'todos.json'), JSON.stringify(todos), () => {
+                console.log(JSON.stringify(todos));
+            });
+            return todos[id];
         } else {
+            console.log("ELSE STATEMENT TRIGGER")
             console.error(`TODO WITH ID OF ${id} DOES NOT EXIST`);
         }
     },

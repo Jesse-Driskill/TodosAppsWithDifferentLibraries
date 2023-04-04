@@ -39,7 +39,7 @@ module.exports = {
     },
     deleteTodo: (id) => {
         delete todos[id];
-        fs.writeFileSync('./todos.json', JSON.stringify(todos));
-        
+        fs.writeFileSync(path.join(__dirname, 'todos.json'), JSON.stringify(todos));
+        return 'todo deleted successfully';
     }
 }

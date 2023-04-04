@@ -45,18 +45,18 @@ const resolvers = {
             return newTodo;
         },
         updateTodo: (_, input) => {
-            let title = input.title;
-            let description = input.description;
-            let id = input.id;
-            const updatedTodo = updateTodoById(id, title, description);
-
-            console.log(title, 'im title');
-            console.log(description, 'im description');
-            console.log(id, 'im id');
+            // let title = input.title;
+            // let description = input.description;
+            // let id = input.id;
+            // const updatedTodo = updateTodoById(id, title, description);
+            const updatedTodo = updateTodoById(input.id, input.title, input.description);
+            // console.log(title, 'im title');
+            // console.log(description, 'im description');
+            // console.log(id, 'im id');
             return updatedTodo;
         },
-        deleteTodo: (_, {id}) => {
-            const deletedTodo = deleteTodoById(id);
+        deleteTodo: (_, input) => {
+            const deletedTodo = deleteTodo(input.id);
             return deletedTodo;
         }
     },

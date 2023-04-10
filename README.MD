@@ -3,7 +3,7 @@ Instructions:
 
 Make sure you have node js installed  
 
-Download Vanilla-JS-App
+Download this repo
 
 npm install apollo-server
 

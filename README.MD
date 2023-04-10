@@ -9,8 +9,10 @@ npm install apollo-server
 
 cd into the backend folder  
 
-type node server.js into your terminal or console  
+run the moddedServer.js and graphqlserver.js files with node
 
-open localhost:3000 in your browser  
+open localhost:3000 in your browser
+
+open localhost:4000 to experiment with queries
 
 have fun!!!

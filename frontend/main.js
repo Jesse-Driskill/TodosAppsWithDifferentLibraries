@@ -92,8 +92,8 @@ document.addEventListener("DOMContentLoaded", () => {
             let el8 = dce('input'); //Todo description input
             let el9 = dce('button'); // New todo form submit button
 
-            el6.setAttribute('action', "/api/todos/");
-            el6.setAttribute('method', "POST");
+            // el6.setAttribute('action', "/api/todos/");
+            // el6.setAttribute('method', "POST");
 
             el7.classList.add('extend-height');
             el8.classList.add('extend-height');
@@ -118,13 +118,29 @@ document.addEventListener("DOMContentLoaded", () => {
                 
 
                 let data = JSON.stringify({todo: newTodo, action: "UPDATETODO"});
+                let updateTodoMutation = `
+                    mutation ($updateTodoId: ID!, $title: String, $description: String) {
+                        updateTodo(id: $updateTodoId, title: $title, description: $description) {
+                            id
+                            title
+                            description
+                        }
+                    }
+                `
 
-                fetch("/api/todos", {
+                fetch("http://localhost:4000/graphql", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
                     },
-                    body: data
+                    body: JSON.stringify({
+                        query: updateTodoMutation,
+                        variables: {
+                            updateTodoId: newTodo.id,
+                            title: newTodo.title,
+                            description: newTodo.description
+                        }
+                    })
                 }).then(response => response.text()).then(data => console.log(data)).catch(error => console.error(error))
                 
             

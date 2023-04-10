@@ -1,9 +1,12 @@
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
-
+const apolloServer = require('apollo-server');
+const gql = apolloServer.gql;
 
 const server = http.createServer((request, response) => {
+
+    console.log(gql);
 
     function readFilePromise(filePath, options) {
         return new Promise((resolve, reject) => {

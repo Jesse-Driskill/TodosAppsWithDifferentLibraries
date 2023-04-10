@@ -165,26 +165,40 @@ document.addEventListener("DOMContentLoaded", () => {
         counter.innerHTML = parseInt(counter.innerHTML) - 1
     });
 
-    
+    const getTodosQuery = `
+        query {
+            getTodos {
+                id
+                title
+                description
+            }
+        }
+    ` 
 
     const getTodos = () => {
-        console.log('Getting todos!')
-        fetch("api/todos", {
-            method: "GET"
+        console.log('Getting todos!');
+        fetch('http://localhost:4000/graphql', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify( {query: getTodosQuery} )
         }).then(response => {
+            console.log(response, 'im response')
             if (response.ok) {
                 return response.json();
             }
+            // response.json();
             throw new Error('Network response was not ok');
-        }).then(data => {
-            // console.log(data, 'im data!')
+        }).then(dataBundle => {
             
-            for(let todoId in data) {
-                spawnTodo(data[todoId])
-                
-            }
+            let todos = dataBundle.data.getTodos;
+
+            todos.forEach(todo => {
+                spawnTodo(todo)
+            }) 
         }).catch(error => {
-            // console.error('Error:', error);
+            console.error('Error:', error);
         })
     }
 
@@ -204,13 +218,28 @@ document.addEventListener("DOMContentLoaded", () => {
 
         spawnTodo(newTodo);
 
-        const data = JSON.stringify({todo: newTodo, action: 'CREATETODO'});
-        fetch("/api/todos", {
+        let createTodoMutation = `
+            mutation ($createTodoId: ID!, $title: String!, $description: String) {
+                createTodo (id: $createTodoId, title: $title, description: $description) {
+                    id
+                    title
+                    description
+                }
+            }
+        `
+
+        fetch("http://localhost:4000/graphql", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
-            body: data
+            body: JSON.stringify({ query: createTodoMutation,
+            variables: {
+                createTodoId: newTodo.id,
+                title: newTodo.title,
+                description: newTodo.description
+            }
+        })
         }).then(response => response.text())
         .then(data => console.log(data))
         .catch(error => console.error(error));

@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const data = fs.readFileSync(path.join(__dirname, 'todos.json'));
 const todos = JSON.parse(data);
-console.log(todos, 'im todos in todosdatajs')
+// console.log(todos, 'im todos in todosdatajs')
 
 module.exports = {
     getAllTodos: () => {
@@ -13,15 +13,17 @@ module.exports = {
         return todos[id];
     },
     createNewTodo: (todo) => {
-        let todosArr = Object.values(todos);
-        console.log(todosArr);
-        console.log(todosArr[todosArr.length - 1].id, 'im key of final value of todosArr');
+        console.log(todo, 'im todo in createNewTodo')
         if (!todos[todo.id]) {
             todos[todo.id] = todo;
             fs.writeFileSync(path.join(__dirname, 'todos.json'), JSON.stringify(todos));
         } else {
             console.error(`TODO WITH ID OF ${todo.id} ALREADY EXISTS`);
         }
+        let todosArr = Object.values(todos);
+        todosArr.push(todo);
+        // console.log(todosArr, 'im todosArr in todosData.js');
+        // console.log(todosArr[todosArr.length - 1].id, 'im key of final value of todosArr');
         return todo;
 
     },
@@ -47,4 +49,4 @@ module.exports = {
         fs.writeFileSync(path.join(__dirname, 'todos.json'), JSON.stringify(todos));
         return 'todo deleted successfully';
     }
-}
+};

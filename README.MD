@@ -5,7 +5,7 @@ Make sure you have node js installed
 
 Download Vanilla-JS-App
 
-npm install graphql
+npm install apollo-server
 
 cd into the backend folder  
 

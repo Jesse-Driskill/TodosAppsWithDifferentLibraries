@@ -28,7 +28,7 @@ const typeDefinitions = `
         updateTodo(id: ID!, title: String, description: String): Todo!
         deleteTodo(id: ID!): ID!
     }
-`
+`;
 
 
 const resolvers = {

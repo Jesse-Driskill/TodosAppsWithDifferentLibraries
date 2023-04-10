@@ -72,15 +72,17 @@ document.addEventListener("DOMContentLoaded", () => {
         listOfTodos.appendChild(el1);
 
         ael('click', el4, () => {
-            fetch("api/todos", {
+            let deleteTodoMutation = `
+                mutation ($deleteTodoId: ID!) {
+                    deleteTodo(id: $deleteTodoId)
+                }
+            `
+            fetch("http://localhost:4000/graphql", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({
-                    todoId: todo.id,
-                    action: "DELETETODO"
-                })
+                body: JSON.stringify({ query: deleteTodoMutation, variables: {deleteTodoId: todo.id}})
 
             })
             el1.remove();
@@ -117,7 +119,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 
 
-                let data = JSON.stringify({todo: newTodo, action: "UPDATETODO"});
                 let updateTodoMutation = `
                     mutation ($updateTodoId: ID!, $title: String, $description: String) {
                         updateTodo(id: $updateTodoId, title: $title, description: $description) {

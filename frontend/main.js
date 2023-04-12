@@ -1,4 +1,4 @@
-
+DatoCMSToken = window.DatoToken;
 
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -169,19 +169,32 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const getTodos = () => {
         console.log('Getting todos!')
-        fetch("api/todos", {
-            method: "GET"
+        fetch("https://graphql.datocms.com/", {
+            method: "POST",
+            headers: {
+                'Authorization': `Bearer ${DatoCMSToken}`,
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({query: `
+                query {
+                    allTodos {
+                        todoId
+                        title
+                        description
+                    }
+                }
+            `})
         }).then(response => {
             if (response.ok) {
                 return response.json();
             }
             throw new Error('Network response was not ok');
         }).then(data => {
-            // console.log(data, 'im data!')
+            console.log(data, 'im data!')
             
-            for(let todoId in data) {
-                spawnTodo(data[todoId])
-                
+            for(let todoId in data.data.allTodos) {
+                spawnTodo(data.data.allTodos[todoId])   
             }
         }).catch(error => {
             // console.error('Error:', error);

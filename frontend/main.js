@@ -76,17 +76,10 @@ document.addEventListener("DOMContentLoaded", () => {
         listOfTodos.appendChild(el1);
 
         ael('click', el4, () => {
-            fetch("api/todos", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    todoId: todo.id,
-                    action: "DELETETODO"
-                })
-
-            })
+            const deleteTodo = async () => {
+                await DatoClient.items.destroy(todo.datoId)
+            }
+            deleteTodo();
             el1.remove();
         });
 
@@ -235,21 +228,7 @@ document.addEventListener("DOMContentLoaded", () => {
         spawnTodo(newTodo);
 
 
-        // const data = JSON.stringify({todo: newTodo, action: 'CREATETODO'});
-        // fetch("https://site-api.datocms.com/items/1387433", {
-        //     method: "POST",
-        //     headers: {
-        //         "Content-Type": "application/json",
-        //         "Accept": "application/json",
-        //         "Authorization": `Bearer ${DatoCMSToken}`,
-        //         "X-Api-Version": "3"
-        //     },
-        //     body: data
-        // }).then(response => response.text())
-        // .then(data => console.log(data))
-        // .catch(error => console.error(error));
-
-        async function run() {
+        async function createTodo() {
             const record = await DatoClient.items.create({
                 item_type: { type: 'item_type', id: '1387433'},
                 title: `${newTodo.title}`,
@@ -259,8 +238,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
             console.log(record);
 
-        }
-        run().then((response) => {
+        };
+
+        createTodo().then((response) => {
             console.log(response, 'im response')
         });
         

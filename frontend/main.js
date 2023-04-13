@@ -1,4 +1,9 @@
-DatoCMSToken = window.DatoToken;
+var DatoCMSToken = DatoToken;
+import { buildClient, LogLevel } from "@datocms/cma-client-browser";
+console.log(buildClient);
+var DatoClient = buildClient({ apiToken: `${DatoToken}`, logLevel: LogLevel.BODY });
+DatoClient.itemTypes.list();
+// DatoClient.items.create()
 
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -48,6 +53,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const todosArray = [];
     const spawnTodo = (todo) => {
         todosArray.push(todo);
+        console.log(todo, 'im todo in spawn todo');
 
         let el1 = dce('li'); //li element to hold title and description
         let el2 = dce('div');  //div with title
@@ -56,14 +62,12 @@ document.addEventListener("DOMContentLoaded", () => {
         let el5 = dce('button');    //edit button
 
         el1.classList.add('todo-li');
-        el1.id = todo.id;
+        el1.id = todo.todoId;
 
         el2.innerHTML = `Title: ${todo.title}`;
         el3.innerHTML = `Description: ${todo.description}`;
         el4.innerHTML = 'DELETE TODO';
         el5.innerHTML = 'EDIT TODO';
-
-        el4.todoId = todo.id;
 
         el1.appendChild(el2);
         el1.appendChild(el3);
@@ -92,9 +96,6 @@ document.addEventListener("DOMContentLoaded", () => {
             let el8 = dce('input'); //Todo description input
             let el9 = dce('button'); // New todo form submit button
 
-            el6.setAttribute('action', "/api/todos/");
-            el6.setAttribute('method', "POST");
-
             el7.classList.add('extend-height');
             el8.classList.add('extend-height');
 
@@ -115,17 +116,18 @@ document.addEventListener("DOMContentLoaded", () => {
                 el2.innerHTML = `Title: ${newTodo.title}`;
                 el3.innerHTML = `Description: ${newTodo.description}`;
 
+                async function updateTodo() {
+                    const item = await DatoClient.items.update(`${todo.datoId}`, {
+                        title: newTodo.title,
+                        description: newTodo.description,
+                    });
+                    console.log(item, 'im item in updateTodo!!!');
+                };
+                updateTodo();
+
                 
 
-                let data = JSON.stringify({todo: newTodo, action: "UPDATETODO"});
-
-                fetch("/api/todos", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: data
-                }).then(response => response.text()).then(data => console.log(data)).catch(error => console.error(error))
+               
                 
             
             })
@@ -168,6 +170,7 @@ document.addEventListener("DOMContentLoaded", () => {
     
 
     const getTodos = () => {
+        var todosObj = {};
         console.log('Getting todos!')
         fetch("https://graphql.datocms.com/", {
             method: "POST",
@@ -179,6 +182,7 @@ document.addEventListener("DOMContentLoaded", () => {
             body: JSON.stringify({query: `
                 query {
                     allTodos {
+                        id
                         todoId
                         title
                         description
@@ -193,9 +197,22 @@ document.addEventListener("DOMContentLoaded", () => {
         }).then(data => {
             console.log(data, 'im data!')
             
-            for(let todoId in data.data.allTodos) {
-                spawnTodo(data.data.allTodos[todoId])   
+            let tArr = data.data.allTodos;
+            
+            //The two loops below are to sort the todos by todoId, so that they appear
+            //on the page in the correct order
+            for (let i = 0; i < tArr.length; i++) {
+                tArr[i].datoId = tArr[i].id;
+                let todo = tArr[i];
+                delete todo.id;
+                todosObj[todo.todoId.toString()] = todo;
             }
+            for (let k = 1; k < tArr.length + 1; k++) {
+                let m = k.toString();
+                spawnTodo(todosObj[m]);
+            }
+            
+            
         }).catch(error => {
             // console.error('Error:', error);
         })
@@ -217,16 +234,37 @@ document.addEventListener("DOMContentLoaded", () => {
 
         spawnTodo(newTodo);
 
-        const data = JSON.stringify({todo: newTodo, action: 'CREATETODO'});
-        fetch("/api/todos", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: data
-        }).then(response => response.text())
-        .then(data => console.log(data))
-        .catch(error => console.error(error));
+
+        // const data = JSON.stringify({todo: newTodo, action: 'CREATETODO'});
+        // fetch("https://site-api.datocms.com/items/1387433", {
+        //     method: "POST",
+        //     headers: {
+        //         "Content-Type": "application/json",
+        //         "Accept": "application/json",
+        //         "Authorization": `Bearer ${DatoCMSToken}`,
+        //         "X-Api-Version": "3"
+        //     },
+        //     body: data
+        // }).then(response => response.text())
+        // .then(data => console.log(data))
+        // .catch(error => console.error(error));
+
+        async function run() {
+            const record = await DatoClient.items.create({
+                item_type: { type: 'item_type', id: '1387433'},
+                title: `${newTodo.title}`,
+                description: `${newTodo.description}`,
+                todo_id: newTodo.id
+            })
+
+            console.log(record);
+
+        }
+        run().then((response) => {
+            console.log(response, 'im response')
+        });
+        
+
        
     });
 
@@ -237,4 +275,10 @@ document.addEventListener("DOMContentLoaded", () => {
 })
 
 
-console.log("Hello world!")
+console.log("Hello world!");
+
+
+
+
+
+

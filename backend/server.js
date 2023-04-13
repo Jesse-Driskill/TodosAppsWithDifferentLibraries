@@ -35,7 +35,8 @@ const server = http.createServer((request, response) => {
         })
 
     }
-    else if (request.method === 'GET') {
+    else if (request.method === 'GET' ) {
+        //&& (request.url === '/main.js' || request.url === '/style.css' || request.url === '/env.js')
         const filePath = path.join(__dirname, '..', 'frontend', request.url);
         fs.readFile(filePath, 'utf-8', (err, data) => {
           if (err) {
